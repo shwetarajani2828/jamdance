@@ -42,7 +42,7 @@ your computer, refresh, and it's still there.
 ## Editing site text
 
 All copy (headings, class descriptions, founder bio, contact info) lives
-in the `SITE_CONTENT` dict near the top of `app.py`. Edit there — the
+in the `SITE_CONTENT` dict near the top of `jam-flask/app.py`. Edit there — the
 template just renders it.
 
 ## How photo upload works
@@ -67,11 +67,11 @@ You don't need Python on your phone. The usual approach:
    directly in GitHub's web interface from a phone browser (or the GitHub
    mobile app) — no local Python needed.
 2. **Connect the repo to a free host** like Render.com or Railway.app.
-   Both auto-detect `requirements.txt` and `Procfile` and deploy on every
+   Both auto-detect `jam-flask/requirements.txt` and `Procfile` and deploy on every
    push — all done from your phone browser.
 3. **Test on the live URL** the host gives you, right from your phone.
 
-For small text edits (changing a sentence in `app.py`), GitHub's mobile
+For small text edits (changing a sentence in `jam-flask/app.py`), GitHub's mobile
 editor is enough. For anything more involved, come back here and I can
 generate the updated files for you to paste in.
 
@@ -94,8 +94,8 @@ Once activated:
 ## Deploying
 
 - **Render / Railway** — connect the GitHub repo, they detect
-  `requirements.txt` and `Procfile` automatically.
-- **PythonAnywhere** — upload the folder, point a WSGI app at `app.py`.
+  `jam-flask/requirements.txt` and `Procfile` automatically.
+- **PythonAnywhere** — upload the folder, point a WSGI app at `jam-flask/app.py`.
 - Don't use `flask run` in production — the `Procfile` runs `gunicorn`
   instead, which is what these hosts use automatically.
 
