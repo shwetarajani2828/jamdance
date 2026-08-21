@@ -14,10 +14,21 @@ Then visit http://127.0.0.1:5000
 import os
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, session
 from PIL import Image, ImageOps
 
 app = Flask(__name__)
+
+# Needed to sign the admin session cookie. Set a real value via the
+# SECRET_KEY environment variable in production (Railway → Variables).
+app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
+
+# The site owner visits the site once with ?admin=<this value> to unlock
+# the "+" photo upload buttons in their own browser. Everyone else just
+# sees plain photos with no upload controls. Set a real secret via the
+# ADMIN_KEY environment variable in Railway → Variables — don't leave the
+# default in production.
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "changeme")
 
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_DIR = BASE_DIR / "static" / "uploads"
@@ -128,16 +139,35 @@ def inject_photo_url():
     return {"photo_url": photo_url}
 
 
+def is_admin() -> bool:
+    return session.get("is_admin", False)
+
+
 @app.route("/")
 def index():
-    return render_template("index.html", **SITE_CONTENT)
+    # Visiting with ?admin=<ADMIN_KEY> unlocks upload buttons for this
+    # browser going forward (stored in a signed session cookie).
+    key = request.args.get("admin")
+    if key and key == ADMIN_KEY:
+        session["is_admin"] = True
+    return render_template("index.html", is_admin=is_admin(), **SITE_CONTENT)
+
+
+@app.route("/admin-logout")
+def admin_logout():
+    session.pop("is_admin", None)
+    return render_template("index.html", is_admin=False, **SITE_CONTENT)
 
 
 @app.route("/upload/<photo_id>", methods=["POST"])
 def upload_photo(photo_id):
     """Receive a photo from any device (including phone camera/gallery),
     resize + compress it server-side, and save it so every visitor sees it.
+    Restricted to the admin session so random visitors can't upload.
     """
+    if not is_admin():
+        return jsonify(message="Not authorized."), 403
+
     if photo_id not in PHOTO_IDS:
         return jsonify(message="Unknown photo slot."), 400
 
@@ -167,7 +197,12 @@ def upload_photo(photo_id):
 
 @app.route("/upload/<photo_id>", methods=["DELETE"])
 def delete_photo(photo_id):
-    """Remove an uploaded photo, reverting that slot to its default look."""
+    """Remove an uploaded photo, reverting that slot to its default look.
+    Restricted to the admin session so random visitors can't delete photos.
+    """
+    if not is_admin():
+        return jsonify(message="Not authorized."), 403
+
     if photo_id not in PHOTO_IDS:
         return jsonify(message="Unknown photo slot."), 400
 
