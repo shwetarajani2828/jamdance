@@ -142,7 +142,8 @@
         </label>
         <span class="photo-add-label">Add photo</span>
         {% else %}
-          <img src="{{ url_for('static', filename='founder.jpg') }}" alt="Founder">
+          <img src="{{ url_for('static', filename='founder.jpg') }}" alt="Founder"
+              style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block;">
         {% endif %}
         <span>{{ founder.role }}</span>
       </div>
