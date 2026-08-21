@@ -275,7 +275,7 @@
   @keyframes scroll-left{from{transform:translateX(0);} to{transform:translateX(-50%);}}
   .community-socials{display:flex; gap:32px; justify-content:center; margin-top:34px; flex-wrap:wrap;}
   .community-tagline{margin-top:26px; font-family:'Fraunces', serif; font-style:italic; font-size:1.2rem; color:#FFFFFF; font-weight:600;}
-  .community-subline{margin-top:8px; font-family:'Fraunces', serif; font-style:italic; font-size:1.4rem; font-weight:600; color:var(--marigold);}
+  .community-subline{margin-top:8px; font-family:'Manrope', sans-serif; font-size:1.6rem; font-weight:800; color:var(--marigold);}
   .social-item{display:flex; flex-direction:column; align-items:center; gap:8px;}
   .social-icon{
     width:44px; height:44px; border-radius:50%; border:1px solid var(--line);
@@ -295,6 +295,7 @@
   .contact-item p, .contact-item a{font-size:1.08rem; color:var(--cream);}
   form{display:flex; flex-direction:column; gap:16px;}
   .field{display:flex; flex-direction:column; gap:8px;}
+  .field[hidden]{display:none;}
   label{font-size:0.8rem; font-weight:700; letter-spacing:0.04em; color:var(--cream-dim); text-transform:uppercase;}
   input, textarea{
     background:rgba(247,236,221,0.05); border:1px solid var(--line); border-radius:10px;
