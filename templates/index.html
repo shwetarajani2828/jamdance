@@ -11,6 +11,13 @@
 </head>
 <body>
 
+{% if is_admin %}
+<div style="position:fixed; bottom:16px; right:16px; z-index:999; background:rgba(29,18,36,0.92); border:1px solid var(--line); color:#F7ECDD; padding:8px 14px; border-radius:999px; font-family:'Manrope',sans-serif; font-size:0.8rem; display:flex; align-items:center; gap:10px;">
+  ✎ Edit mode
+  <a href="/admin-logout" style="color:#F4A61C; font-weight:700; text-decoration:none;">Log out</a>
+</div>
+{% endif %}
+
 {% macro photo_placeholder(id, extra_class='', small=False) -%}
   {%- set url = photo_url(id) -%}
   data-photo-id="{{ id }}"{% if url %} style="background-image:url('{{ url }}')"{% endif %} class="{{ extra_class }}{% if url %} has-photo{% endif %}"
@@ -44,12 +51,12 @@
         <h1>Feel the rhythm.<br>Find your <em>movement.</em></h1>
         <p class="lede">JAM Dance Academy is a vibrant Bollywood dance community in Belgium — an inclusive space to express yourself through movement, whether you're just starting out or refining your craft.</p>
         <div class="hero-ctas">
-          <a href="#enquiry" class="btn btn-primary">Get Started</a>
+          <a href="#classes" class="btn btn-primary">Discover classes</a>
           <a href="#enquiry" class="btn btn-ghost">Enquire</a>
         </div>
       </div>
       <div class="hero-mark">
-        <img class="hero-logo" src="{{ url_for('static', filename='logo.jpg') }}" alt="JAM Dance Academy logo">
+        <img class="hero-logo" src="{{ url_for('static', filename='logo.jpeg') }}" alt="JAM Dance Academy logo">
       </div>
     </div>
   </section>
@@ -62,11 +69,13 @@
   <section class="about" id="about">
     <div class="wrap about-grid">
       <div {{ photo_placeholder('about-visual', 'about-visual') }}>
+        {% if is_admin %}
         <label class="photo-add">
           <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           <input type="file" accept="image/*" class="photo-input">
         </label>
         <span class="photo-add-label">Add photo</span>
+        {% endif %}
         <div class="beat"></div>
         <div class="beat"></div>
       </div>
@@ -91,11 +100,13 @@
       <div class="classes-grid">
         {% for c in classes %}
         <div {{ photo_placeholder(c.id, 'class-card') }}>
+          {% if is_admin %}
           <label class="photo-add">
             <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
             <input type="file" accept="image/*" class="photo-input">
           </label>
           <span class="photo-add-label">Add photo</span>
+          {% endif %}
           <div class="class-card-content">
             <span class="class-num">{{ c.label }}</span>
             <h3>{{ c.title }}</h3>
@@ -121,11 +132,13 @@
   <section class="founder" id="founder">
     <div class="wrap founder-grid">
       <div {{ photo_placeholder('founder-photo', 'founder-photo') }}>
+        {% if is_admin %}
         <label class="photo-add">
           <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           <input type="file" accept="image/*" class="photo-input">
         </label>
         <span class="photo-add-label">Add photo</span>
+        {% endif %}
         <span>{{ founder.role }}</span>
       </div>
       <div class="founder-copy">
@@ -150,10 +163,12 @@
         {% for copy in [1, 2] %}
           {% for n in range(1, 6) %}
           <div {{ photo_placeholder('community-tile-' ~ n, 'community-tile') }}>
+            {% if is_admin %}
             <label class="photo-add photo-add-sm" title="Add photo">
               <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
               <input type="file" accept="image/*" class="photo-input">
             </label>
+            {% endif %}
           </div>
           {% endfor %}
         {% endfor %}
