@@ -23,6 +23,11 @@ app = Flask(__name__)
 # SECRET_KEY environment variable in production (Railway → Variables).
 app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
 
+# Keep the admin session alive for 30 days instead of expiring when the
+# mobile browser closes/backgrounds (which happens often on phones).
+from datetime import timedelta
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
+
 # The site owner visits the site once with ?admin=<this value> to unlock
 # the "+" photo upload buttons in their own browser. Everyone else just
 # sees plain photos with no upload controls. Set a real secret via the
@@ -148,9 +153,20 @@ def index():
     # Visiting with ?admin=<ADMIN_KEY> unlocks upload buttons for this
     # browser going forward (stored in a signed session cookie).
     key = request.args.get("admin")
-    if key and key == ADMIN_KEY:
-        session["is_admin"] = True
-    return render_template("index.html", is_admin=is_admin(), **SITE_CONTENT)
+    if key is not None:
+        matched = key.strip() == ADMIN_KEY.strip()
+        app.logger.info(
+            "Admin key check: provided=%r expected_set=%r matched=%s",
+            key, bool(ADMIN_KEY), matched
+        )
+        if matched:
+            session["is_admin"] = True
+            session.permanent = True
+
+    resp = render_template("index.html", is_admin=is_admin(), **SITE_CONTENT)
+    response = app.make_response(resp)
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 @app.route("/admin-logout")
