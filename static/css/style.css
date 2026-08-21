@@ -110,7 +110,7 @@
     font-style:italic; color:var(--marigold);
   }
   .hero p.lede{
-    margin-top:22px; font-size:1.08rem; color:var(--cream-dim); max-width:46ch;
+    margin-top:22px; font-size:1.08rem; color:var(--cream-dim); max-width:58ch;
   }
   .hero-ctas{display:flex; gap:16px; margin-top:34px; flex-wrap:wrap;}
   .btn{
