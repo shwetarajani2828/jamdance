@@ -75,6 +75,8 @@
           <input type="file" accept="image/*" class="photo-input">
         </label>
         <span class="photo-add-label">Add photo</span>
+        {% else %}
+          <img class="about-photo" src="{{ url_for('static', filename='upload/about.jpeg') }}" alt="JAM Dance Academy">
         {% endif %}
         <div class="beat"></div>
         <div class="beat"></div>
